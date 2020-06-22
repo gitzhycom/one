@@ -300,40 +300,39 @@ $(function(){
     echarts.init(document.getElementById("host3")).setOption(hostOption);
     echarts.init(document.getElementById("host4")).setOption(hostOption);
 
-
-    var btn = document.getElementById("btn");
-    btn.onclick = function () {
-        var elem = document.getElementById("content");
-        requestFullScreen(elem);
-    };
-
-    var close = document.getElementById("close");
-    close.onclick = function () {
-        exitFullscreen();
-    };
-
+     var fullscreen = false;
 })
-function requestFullScreen(element) {
-    var requestMethod = element.requestFullScreen || element.webkitRequestFullScreen || element.mozRequestFullScreen || element.msRequestFullScreen;
-    if (requestMethod) {
-        requestMethod.call(element);
-    } else if (typeof window.ActiveXObject !== "undefined") {
-        var wscript = new ActiveXObject("WScript.Shell");
-        if (wscript !== null) {
-            wscript.SendKeys("{F11}");
+// 全屏事件
+function handleFullScreen(){
+    let element = document.documentElement;
+    // 判断是否已经是全屏
+    // 如果是全屏，退出
+    if (this.fullscreen) {
+        if (document.exitFullscreen) {
+            document.exitFullscreen();
+        } else if (document.webkitCancelFullScreen) {
+            document.webkitCancelFullScreen();
+        } else if (document.mozCancelFullScreen) {
+            document.mozCancelFullScreen();
+        } else if (document.msExitFullscreen) {
+            document.msExitFullscreen();
         }
+        console.log('已还原！');
+    } else {    // 否则，进入全屏
+        if (element.requestFullscreen) {
+            element.requestFullscreen();
+        } else if (element.webkitRequestFullScreen) {
+            element.webkitRequestFullScreen();
+        } else if (element.mozRequestFullScreen) {
+            element.mozRequestFullScreen();
+        } else if (element.msRequestFullscreen) {
+            // IE11
+            element.msRequestFullscreen();
+        }
+        console.log('已全屏！');
     }
-}
-function exitFullscreen() {
-    if (document.exitFullscreen) {
-        document.exitFullscreen();
-    } else if (document.msExitFullscreen) {
-        document.msExitFullscreen();
-    } else if (document.mozCancelFullScreen) {
-        document.mozCancelFullScreen();
-    } else if (document.webkitExitFullscreen) {
-        document.webkitExitFullscreen();
-    }
+    // 改变当前全屏状态
+    this.fullscreen = !this.fullscreen;
 }
 
 
